@@ -22,3 +22,5 @@ urlpatterns = [
     path('simple1/', include('simple1.urls')),
     path('simple2/', include('simple2.urls')),
 ]
+
+urlpatterns += path('simple3/', include('simple3.urls')),
