@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from corsheaders.defaults import default_headers
 from pathlib import Path
 import mongoengine
 
@@ -41,12 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     'simple1',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -130,6 +133,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #
 # Custom
 #
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:4200',
+    "http://127.0.0.1:4200",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to access CSRF token
+CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+CSRF_COOKIE_SAMESITE = "Lax"  # Allow CSRF cookie to be sent
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:4200",
+    "http://localhost:4200",
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-Request-Type',
+    'X-Anonymous-Token',
+    'x-refresh-token',
+    #'Cache-Control',
+    #'Pragma',
+]
 
 # MongoDB connection setup
 mongoengine.connect(
