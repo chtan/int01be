@@ -30,6 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
+    'testserver', # 'testserver' is the default hostname used by Django's built-in testing tools, specifically the django.test.Client.
 ]
 
 
@@ -44,6 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "corsheaders",
     'simple1',
+    'simple4',
+    "simple5",
+    "simple6",
+    "core",
+    "plugins",
+    ##ADD_APP_HERE
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -62,8 +70,13 @@ ROOT_URLCONF = 'int01be.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [
+            BASE_DIR / "plugins/app1/templates",
+            BASE_DIR / "plugins/app2/templates",
+            BASE_DIR / "plugins/app3/templates",
+            ##ADD_APPTEMPLATES_HERE
+        ],
+        'APP_DIRS': True, # the templates in the installed apps are visible
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -123,7 +136,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+#STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -171,3 +187,8 @@ MONGO_URI = "mongodb://localhost:27017/"
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
+
+# Authentication system is project level in Django.
+LOGIN_URL = "/core/login/"
+LOGIN_REDIRECT_URL = "/core/home/"
+LOGOUT_REDIRECT_URL = "/core/login/"

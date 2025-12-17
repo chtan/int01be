@@ -1,0 +1,34 @@
+{% extends 'core/base2.html' %}
+
+{% block title %}App1 {{ current_page }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3>
+    <i class="fa fa-house"></i> 
+  </h3>
+</div>
+
+{% if request.session.access_token %}
+{% endif %}
+
+<h3>You are on {{ current_page }}</h3>
+
+<div class="navigation">
+    {% if forward_url %}
+        <a href="{% url 'plugins:plugin_dispatch' 'app1' 'page2' %}?transition=forward">Forward to Page 2</a>
+    {% endif %}
+    
+    {% if backward_url %}
+        <a href="{% url 'plugins:plugin_dispatch' 'app1' 'firstpage' %}?transition=backward">Backward to Page 1</a>
+    {% endif %}
+    
+    <a href="{% url 'plugins:plugin_dispatch' 'app1' 'exit' %}" style="background-color: #dc3545; color: white; border-color: #dc3545;">❌ Exit Game</a>
+</div>
+
+<div class="session-info">
+    <h4>Current Session State</h4>
+    <p>Your location ({{ current_page }}) is now saved in the session.</p>
+</div>
+
+{% endblock %}

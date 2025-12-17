@@ -1,0 +1,26 @@
+{% extends 'simple5/base.html' %}
+{% load static %}
+
+{% block title %}{{ current_page }}{% endblock %}
+
+{% block content %}
+    <h2>You are on {{ current_page }}</h2>
+    <p>URL: <code>/simple4/origin/{{ current_page|lower|cut:" " }}</code></p>
+
+    <div class="navigation">
+        {% if forward_url %}
+            <a href="{% url 'plugins:plugin_dispatch' 'app3' 'page2' %}?transition=forward">Forward to Page 2</a>
+        {% endif %}
+        
+        {% if backward_url %}
+            <a href="{% url 'plugins:plugin_dispatch' 'app3' 'firstpage' %}?transition=backward">Backward to Page 1</a>
+        {% endif %}
+        
+        <a href="{% url 'plugins:plugin_dispatch' 'app3' 'exit' %}" style="background-color: #dc3545; color: white; border-color: #dc3545;">❌ Exit Game</a>
+    </div>
+
+    <div class="session-info">
+        <h3>Current Session State</h3>
+        <p>Your location ({{ current_page }}) is now saved in the session.</p>
+    </div>
+{% endblock content %}

@@ -1,0 +1,55 @@
+from .models_mongo import UserState, Page1State, Page2State
+
+
+def get_user_key(request):
+    """
+    Use Django user if logged in; else use session key.
+    
+    Since authentication is not set up:
+    - request.user == AnonymousUser()
+    - request.user.is_authenticated == False
+    """
+    if request.user.is_authenticated:
+        return str(request.user.id)
+
+    if not request.session.session_key:
+        request.session.save()  # creates the session and cookie
+    return request.session.session_key  # now guaranteed to be non-None
+
+
+def get_or_create_task_state(request):
+    """
+    Returns a MongoEngine document for this user/session,
+    creating one if it doesn't exist.
+    """
+    user_key = get_user_key(request)
+
+    doc = UserState.objects(user_id=user_key).first()
+    if doc is None:
+        doc = UserState(user_id=user_key)
+        doc.save()
+    return doc
+
+
+def get_page1_state(request):
+    """
+    Returns a MongoEngine document for this user/session,
+    creating one if it doesn't exist.
+    """
+    doc = Page1State.objects().first()
+    if doc is None:
+        doc = Page1State()
+        doc.save()
+    return doc
+
+
+def get_page2_state(request):
+    """
+    Returns a MongoEngine document for this user/session,
+    creating one if it doesn't exist.
+    """
+    doc = Page2State.objects().first()
+    if doc is None:
+        doc = Page2State()
+        doc.save()
+    return doc
