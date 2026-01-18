@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import socket
-hostname = socket.gethostname()
+import os
+ENVIRONMENT = os.environ.get("DJANGO_ENV", "development")
 
 from corsheaders.defaults import default_headers
 from pathlib import Path
@@ -28,14 +28,25 @@ SECRET_KEY = 'django-insecure-a#-z+xnf6^yag#u7^z93zkp!8s%gly2jaep)lo%lwiae-r8^rn
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+if ENVIRONMENT == "production":
+    DEBUG = False
 
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
 
-if "laptop" in hostname.lower():
-    # Local development
-    ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
+if ENVIRONMENT == "production":
+    ALLOWED_HOSTS += [
+        "enlightenlab.com",
+        "www.enlightenlab.com",
+        "api.enlightenlab.com",
+        "172.105.120.124",
+    ]
 else:
-    # Remote server
-    ALLOWED_HOSTS = ["enlightenlab.com", "www.enlightenlab.com", "172.105.120.124"]
+    ALLOWED_HOSTS += [
+        "testserver"
+    ]
 
 
 # Application definition
