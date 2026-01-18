@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,14 +18,48 @@
     body { font-family: 'Inter', sans-serif; }
   </style>
 
-  {% block extra_head %}{% endblock %}
+  {% block extra_head %}
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false}
+            ]
+          });">
+  </script>
+  {% endblock %}
 </head>
 
 <body>
 
 <nav class="navbar navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand" href="/core/token/">EnlightenLab</a>
+  <div class="container d-flex justify-content-between">
+
+    <!-- Left: Brand -->
+    <a class="navbar-brand" href="/">EnlightenLab</a>
+
+    <!-- Right: Login -->
+    <div class="d-flex align-items-center">
+      {% if user.is_authenticated %}
+        <a href="{% url 'core:logout' %}" class="text-light text-decoration-none">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+        </a>
+      {% else %}
+        <a href="{% url 'core:login' %}" class="text-light text-decoration-none">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          Login
+        </a>
+      {% endif %}
+    </div>
+
   </div>
 </nav>
 

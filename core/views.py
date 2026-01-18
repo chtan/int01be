@@ -10,10 +10,12 @@ from core.registry import PLUGINS_login
 CORRECT_TOKENS = [
     "MYSECRET123",
     "MYSECRET123_3",
+    "mcqset1_token1",
 ]
 TOKEN_TO_APP_DICT = {
     "MYSECRET123": "app1",
     "MYSECRET123_3": "app3",
+    "mcqset1_token1": "mcqset1",
 }
 
 
@@ -42,8 +44,16 @@ def login_view(request):
 # Protected home page
 @login_required(login_url="/core/login/")
 def home_view(request):
+    """
+    
+    """
+    user = request.user
+    from .models_mongo import UserPlugins
+    doc = UserPlugins.objects(user_id=user.username).first()
+
     context = {
-        "plugins": PLUGINS_login.keys(),
+        #"plugins": PLUGINS_login.keys(),
+        "plugins": doc.plugins,
     }
     
     return render(request, 'core/home.html', context)
@@ -51,7 +61,8 @@ def home_view(request):
 # Logout
 def logout_view(request):
     logout(request)
-    return redirect(reverse("core:login"))
+    #return redirect(reverse("core:login"))
+    return redirect("/")
 
 
 def token_view(request):

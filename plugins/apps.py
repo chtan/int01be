@@ -5,12 +5,16 @@ class PluginsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'plugins'
 
+    # These are the apps that are accessible only by those who are authenticated.
     authenticated_apps = [
         'app2',
         ##ENTER_APP_HERE
     ]
 
     def ready(self):
+        """
+        After all apps are loaded, Django calls the appconfig.ready()'s.
+        """
         from core.registry import register_plugin_login
         
         for app in self.authenticated_apps:

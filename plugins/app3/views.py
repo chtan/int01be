@@ -6,9 +6,9 @@ from .models_mongo import UserState, Page1State, Page2State
 TOKEN = 'access_token'
 TOKEN_AUTHENTICATED_FLAG = 'token_authenticated'
 SESSION_KEY_LAST_PAGE = 'last_page'
-URL_ORIGIN = '/core/token/'
-URL_PAGE_1 = '/core/plugins.app3/firstpage/'
-URL_PAGE_2 = '/core/plugins.app3/page2/'
+URL_ORIGIN = '/tokentask/app3/origin' # tokentask hosts the landing page for token-required apps
+URL_PAGE_1 = '/plugins/app3/firstpage/' # plugins contain api as well as UI (which should go to Angular)
+URL_PAGE_2 = '/plugins/app3/page2/'
 
 
 @token_required
@@ -26,6 +26,8 @@ def firstpage(request):
     page_state = get_page1_state(request)
     page_state.visits += 1
     page_state.save()
+
+    print("!!!!111", page_state.visits, mongo_state.steps)
 
     context = {
         'current_page': 'Page 1',
@@ -49,6 +51,8 @@ def page2(request):
     page_state = get_page2_state(request)
     page_state.visits += 1
     page_state.save()
+
+    print("!!!!222", page_state.visits, mongo_state.steps)
 
     context = {
         'current_page': 'Page 2',

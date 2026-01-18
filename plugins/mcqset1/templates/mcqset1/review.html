@@ -1,0 +1,274 @@
+{% extends 'core/base4.html' %}
+
+{% block title %}MCQ Review{% endblock %}
+
+{% block content %}
+<style>
+/* ---------- Page layout ---------- */
+.review-page {
+    min-height: 100vh;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #f4f7fb, #eef2f7);
+    display: flex;
+    justify-content: center;
+}
+
+/* ---------- Grid layout ---------- */
+.review-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* ---------- Side menu ---------- */
+.side-menu {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.side-menu h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    color: #374151;
+    text-align: center;
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu li {
+    margin-bottom: 0.4rem;
+}
+
+.side-menu button {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #2563eb;
+    text-align: left;
+}
+
+.side-menu button:hover {
+    background: #f1f5f9;
+}
+
+/* ---------- Card ---------- */
+.review-card {
+    background: white;
+    border-radius: 14px;
+    padding: 3rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Header ---------- */
+.review-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.review-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.review-header p {
+    color: #6b7280;
+}
+
+/* ---------- Score ---------- */
+.score-box {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+/* ---------- Legend ---------- */
+.legend {
+    margin: 2.5rem auto 3rem;
+    padding: 0.9rem 1.2rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    font-size: 0.9rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+}
+
+.legend-correct { color: #16a34a; }
+.legend-selected { color: #2563eb; }
+.legend-wrong { color: #dc2626; }
+
+/* ---------- Questions ---------- */
+.review-question {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e5e7eb;
+    scroll-margin-top: 120px;
+}
+
+.review-question h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+}
+
+.answer {
+    margin: 0.3rem 0;
+}
+
+.answer.correct { color: #16a34a; font-weight: 500; }
+.answer.selected { color: #2563eb; font-weight: 500; }
+.answer.wrong { color: #dc2626; font-weight: 500; }
+
+/* ---------- Explanation ---------- */
+.explanation {
+    margin-top: 0.8rem;
+    padding: 0.9rem 1rem;
+    background: #f9fafb;
+    border-left: 4px solid #2563eb;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+/* ---------- Footer ---------- */
+.review-footer {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    background: #2563eb;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .review-layout {
+        grid-template-columns: 1fr;
+    }
+    .side-menu {
+        position: relative;
+        top: auto;
+    }
+}
+</style>
+
+<div class="review-page">
+    <div class="review-layout">
+
+        <!-- Side Menu -->
+        <nav class="side-menu">
+            <h4>Jump to</h4>
+            <ul>
+                {% for q in questions %}
+                <li>
+                    <button type="button" data-target="q{{ q.id }}">
+                        Question {{ q.id }}
+                    </button>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <!-- Main Card -->
+        <div class="review-card">
+
+            <div class="review-header">
+                <h1>MCQ Test Results</h1>
+                <p>Here’s how you performed and what you can learn from it.</p>
+
+                <div class="score-box">
+                    <div>
+                        <div style="font-size:2rem;font-weight:600;">
+                            {{ score }} / {{ total_questions }}
+                        </div>
+                        <div style="color:#6b7280;">Score</div>
+                    </div>
+                    <div>
+                        <div style="font-size:2rem;font-weight:600;">
+                            {{ percentage }}%
+                        </div>
+                        <div style="color:#6b7280;">Percentage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item legend-correct">● Correct answer</div>
+                <div class="legend-item legend-selected">● Your answer</div>
+                <div class="legend-item legend-wrong">● Incorrect answer</div>
+            </div>
+
+            {% for q in questions %}
+            <div class="review-question" id="q{{ q.id }}">
+                <h3>Q{{ q.id }}. {{ q.question }}</h3>
+
+                {% for choice in q.choices %}
+                {% with idx=forloop.counter0 %}
+                <div class="answer
+                    {% if idx == q.correct_index %}correct{% endif %}
+                    {% if idx == q.selected_index and idx != q.correct_index %}wrong{% endif %}
+                    {% if idx == q.selected_index %}selected{% endif %}
+                ">
+                    {{ choice }}
+                </div>
+                {% endwith %}
+                {% endfor %}
+
+                <div class="explanation">
+                    <strong>Explanation:</strong><br>
+                    {{ q.explanation|safe }}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="review-footer">
+                <a href="/tokentask/mcqset1/home" class="back-btn">
+                    Back to Task Home
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.side-menu button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

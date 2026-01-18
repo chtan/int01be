@@ -1,0 +1,233 @@
+{% extends 'core/base4.html' %}
+
+{% block title %}MCQ - Question {{ q_id }}{% endblock %}
+
+{% block content %}
+<style>
+/* ---------- Page layout ---------- */
+.quiz-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 4rem 1rem;
+    background: linear-gradient(135deg, #f4f7fb, #eef2f7);
+    box-sizing: border-box;
+}
+
+/* ---------- Card ---------- */
+.quiz-card {
+    width: 100%;
+    max-width: 860px;
+    background: white;
+    border-radius: 14px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Header ---------- */
+.quiz-header {
+    margin-bottom: 2rem;
+}
+
+.quiz-progress {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.quiz-question {
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* ---------- Choices ---------- */
+.choices {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin: 2rem 0;
+}
+
+.choice {
+    display: flex;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+}
+
+.choice:hover {
+    background: #f9fafb;
+}
+
+.choice input {
+    margin-right: 0.8rem;
+}
+
+.choice.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ---------- Actions ---------- */
+.actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.actions .review-btn {
+    margin-left: auto;   /* push Review button to the right */
+}
+
+button {
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submit-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.review-btn {
+    background: #16a34a;
+    color: white;
+}
+
+/* ---------- Navigation ---------- */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.5rem;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.nav a.disabled {
+    pointer-events: none;
+    color: #9ca3af;
+}
+</style>
+
+<div class="quiz-page">
+    <div class="quiz-card">
+
+        <div class="quiz-header">
+            <div class="quiz-progress">
+                Question {{ q_id }} of {{ total_questions }}
+            </div>
+            <div class="quiz-question">
+                {{ question }}
+            </div>
+        </div>
+
+        <form id="mcq-form">
+            <div class="choices">
+                {% for choice in choices %}
+                <label class="choice {% if selected_choice is not None %}disabled{% endif %}">
+                    <input type="radio"
+                           name="choice"
+                           value="{{ forloop.counter0 }}"
+                           {% if selected_choice == forloop.counter0 %}checked{% endif %}
+                           {% if selected_choice is not None %}disabled{% endif %}>
+                    {{ choice }}
+                </label>
+                {% endfor %}
+            </div>
+
+            <div class="actions">
+                <button type="submit"
+                        id="submit-btn"
+                        class="submit-btn"
+                        disabled>
+                    Submit
+                </button>
+
+                <button type="button"
+                        id="review-btn"
+                        class="review-btn"
+                        {% if not all_answered %}disabled{% endif %}>
+                    Review
+                </button>
+            </div>
+        </form>
+
+        <div class="nav">
+            <a href="?q={{ q_index|add:'-1' }}"
+               class="{% if q_index == 0 %}disabled{% endif %}">
+                ← Previous
+            </a>
+
+            <a href="?q={{ q_index|add:'1' }}"
+               class="{% if q_index == total_questions|add:'-1' %}disabled{% endif %}">
+                Next →
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('mcq-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const radios = form.querySelectorAll('input[type=radio]');
+    const reviewBtn = document.getElementById('review-btn');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            submitBtn.disabled = false;
+        });
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const selected = form.querySelector('input[name="choice"]:checked');
+        if (!selected) return;
+
+        fetch("", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}",
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: `choice=${selected.value}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                radios.forEach(r => r.disabled = true);
+                submitBtn.disabled = true;
+
+                if (data.all_answered) {
+                    reviewBtn.disabled = false;
+                }
+            }
+        });
+    });
+
+    reviewBtn.addEventListener('click', function () {
+        window.location.href = "/plugins/mcqset1/review";
+    });
+});
+</script>
+{% endblock %}

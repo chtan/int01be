@@ -44,15 +44,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "corsheaders",
-    'simple1',
-    'simple4',
-    "simple5",
-    "simple6",
-    "core",
-    "plugins",
-    ##ADD_APP_HERE
     'django_extensions',
 ]
+
+INSTALLED_APPS_1 = [
+    'simple1',
+    'simple4',
+    "tokentask",
+    "simple6",
+    "simple7",
+    "core",
+    "plugins",
+    "home",
+]
+
+INSTALLED_APPS += INSTALLED_APPS_1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,12 +76,7 @@ ROOT_URLCONF = 'int01be.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / "plugins/app1/templates",
-            BASE_DIR / "plugins/app2/templates",
-            BASE_DIR / "plugins/app3/templates",
-            ##ADD_APPTEMPLATES_HERE
-        ],
+        'DIRS': [],
         'APP_DIRS': True, # the templates in the installed apps are visible
         'OPTIONS': {
             'context_processors': [
@@ -87,6 +88,17 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATES_0_DIR_1 = [
+    BASE_DIR / "plugins/home/templates",
+    BASE_DIR / "plugins/app1/templates",
+    BASE_DIR / "plugins/app2/templates",
+    BASE_DIR / "plugins/app3/templates",
+    BASE_DIR / "plugins/mcqset1/templates",
+    BASE_DIR / "plugins/mcqset2/templates",
+]
+
+TEMPLATES[0]['DIRS'] += TEMPLATES_0_DIR_1
 
 WSGI_APPLICATION = 'int01be.wsgi.application'
 

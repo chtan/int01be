@@ -5,11 +5,9 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h3>
-    <i class="fa fa-house"></i> 
+    <i class="fa fa-house"></i> {{ current_page }}
   </h3>
 </div>
-
-<h3>You are on {{ current_page }}</h3>
 
 <div class="navigation">
     {% if forward_url %}
@@ -19,13 +17,17 @@
     {% if backward_url %}
         <a href="{% url 'plugins:plugin_dispatch' 'app3' 'firstpage' %}?transition=backward">Backward to Page 1</a>
     {% endif %}
+
+    <br>
     
     <a href="{% url 'plugins:plugin_dispatch' 'app3' 'exit' %}" style="background-color: #dc3545; color: white; border-color: #dc3545;">❌ Exit Game</a>
 </div>
 
+<!--
 <div class="session-info">
     <h4>Current Session State</h4>
     <p>Your location ({{ current_page }}) is now saved in the session.</p>
 </div>
+-->
 
 {% endblock %}

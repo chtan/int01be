@@ -1,0 +1,174 @@
+{% extends 'core/base2.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+/* ---------- Page Layout ---------- */
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, #f4f7fb, #eef2f7);
+}
+
+/* ---------- Cards ---------- */
+.card {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    border-radius: 14px;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* ---------- Headings ---------- */
+.card h2, .card h3 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* ---------- Paragraphs ---------- */
+.card p {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* ---------- Navigation / Buttons ---------- */
+.card .navigation a,
+.card button {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+/* Go button */
+.card .navigation a {
+    background-color: #2563eb;
+    color: white;
+}
+
+.card .navigation a:hover {
+    background-color: #1d4ed8;
+}
+
+/* Form buttons */
+.card button {
+    background-color: #16a34a;
+    color: white;
+}
+
+.card button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.card button:hover:enabled {
+    background-color: #15803d;
+}
+
+/* ---------- Session forms ---------- */
+.session-forms {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.session-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;   /* 👈 vertical centering */
+    gap: 0.75rem;
+}
+
+.session-form button {
+    flex-shrink: 0;
+}
+
+.session-form span {
+    flex: 1;
+    line-height: 1.4;
+    text-align: left; /* LEFT justify description */
+}
+
+/* ---------- Review Card ---------- */
+.review-card p {
+    margin-bottom: 1rem;
+}
+
+.review-card .navigation,
+.review-card button {
+    background-color: #16a34a;
+    color: white;
+}
+
+.review-card .navigation:hover,
+.review-card button:hover:enabled {
+    background-color: #15803d;
+}
+</style>
+
+<div class="home-container">
+
+    <!-- Welcome Card -->
+    <div class="card">
+        <h2>Welcome to {{ app_name }}</h2>
+        <p>Click 'Go' to start the task.</p>
+        <div class="navigation">
+            {% if not all_answered %}
+                <a href="/plugins/{{ app_name }}/firstpage">▶️ Go</a>
+            {% else %}
+                <button disabled style="opacity:0.5; cursor:not-allowed;">
+                    ▶️ Go
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Session Info Card -->
+    <div class="card session-info">
+        <h3>Restart Task</h3>
+        <p>Clear session and task states</p>
+        <!-- Session Forms -->
+        <div class="navigation">
+            <form method="post" action="/plugins/{{ app_name }}/clear/">
+                {% csrf_token %}
+                <button type="submit">Restart</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review MCQ Card -->
+    <div class="card review-card">
+        <h3>Review Task Performance</h3>
+        <p>View your results and explanations.</p>
+
+        {% if all_answered %}
+            <a href="/plugins/{{ app_name }}/review" class="btn btn-success">
+                📝 Review MCQ
+            </a>
+        {% else %}
+            <button class="btn btn-secondary" disabled>
+                📝 Review MCQ
+            </button>
+            <div class="text-muted mt-2" style="font-size:0.9rem;">
+                Complete all questions to unlock review
+            </div>
+        {% endif %}
+    </div>
+
+
+</div>
+{% endblock %}

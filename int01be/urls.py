@@ -17,17 +17,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from home import views as home_views
+
 urlpatterns = [
+    #path('/', ),
     path('admin/', admin.site.urls),
     path('simple1/', include('simple1.urls')),
     path('simple2/', include('simple2.urls')),
 ]
 
+urlpatterns += [path('', home_views.home, name='home')]
+
 urlpatterns += [path('simple3/', include('simple3.urls'))]
 urlpatterns += [path('simple4/', include('simple4.urls'))]
 
-urlpatterns += [path('simple5/', include('simple5.urls'))]
+urlpatterns += [path('tokentask/', include('tokentask.urls'))]
 urlpatterns += [path('simple6/', include('simple6.urls'))]
+urlpatterns += [path('simple7/', include('simple7.urls'))]
 
 urlpatterns += [path('core/', include('core.urls'))]
 

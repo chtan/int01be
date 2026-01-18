@@ -5,7 +5,7 @@ from . import views
 app_name = "core"
 
 urlpatterns = [
-    path("", views.index_redirect, name="index_redirect"),  # redirect base /core
+    #path("", views.index_redirect, name="index_redirect"),  # redirect base /core
     path("login/", views.login_view, name="login"),
     path("home/", views.home_view, name="home"),
     path("logout/", views.logout_view, name="logout"),
