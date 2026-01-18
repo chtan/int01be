@@ -38,13 +38,6 @@ else:
     ALLOWED_HOSTS = ["enlightenlab.com", "www.enlightenlab.com", "172.105.120.124"]
 
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'testserver', # 'testserver' is the default hostname used by Django's built-in testing tools, specifically the django.test.Client.
-]
-
-
 # Application definition
 
 INSTALLED_APPS = [
