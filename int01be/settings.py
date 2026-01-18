@@ -48,11 +48,11 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS_1 = [
-    'simple1',
-    'simple4',
+    #'simple1',
+    #'simple4',
     "tokentask",
-    "simple6",
-    "simple7",
+    #"simple6",
+    #"simple7",
     "core",
     "plugins",
     "home",

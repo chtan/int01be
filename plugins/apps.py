@@ -15,9 +15,11 @@ class PluginsConfig(AppConfig):
         """
         After all apps are loaded, Django calls the appconfig.ready()'s.
         """
-        from core.registry import register_plugin_login
+        #from core.registry import register_plugin_login
         
-        for app in self.authenticated_apps:
-            register_plugin_login(app, self)
+        #for app in self.authenticated_apps:
+        #    register_plugin_login(app, self)
 
+        # This above is now handled at the database level.
+        pass
 

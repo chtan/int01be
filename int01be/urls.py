@@ -22,20 +22,13 @@ from home import views as home_views
 urlpatterns = [
     #path('/', ),
     path('admin/', admin.site.urls),
-    path('simple1/', include('simple1.urls')),
-    path('simple2/', include('simple2.urls')),
 ]
 
 urlpatterns += [path('', home_views.home, name='home')]
 
-urlpatterns += [path('simple3/', include('simple3.urls'))]
-urlpatterns += [path('simple4/', include('simple4.urls'))]
-
 urlpatterns += [path('tokentask/', include('tokentask.urls'))]
-urlpatterns += [path('simple6/', include('simple6.urls'))]
-urlpatterns += [path('simple7/', include('simple7.urls'))]
-
 urlpatterns += [path('core/', include('core.urls'))]
+urlpatterns += [path('plugins/', include('plugins.urls'))]
 
 # Dynamically include plugins
 #
@@ -56,8 +49,6 @@ for plugin_config in PLUGINS.values():
         # Skip if plugin has no urls.py
         pass
 """
-urlpatterns += [path('plugins/', include('plugins.urls'))]
-
 
 #
 # I had to do this to allow css to be detected by both localhost and 127.0.0.1,

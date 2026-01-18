@@ -3,18 +3,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from core.registry import PLUGINS_login
 
 
 # Example: set a "correct" token
 CORRECT_TOKENS = [
-    "MYSECRET123",
-    "MYSECRET123_3",
+    #"MYSECRET123",
+    #"MYSECRET123_3",
     "mcqset1_token1",
 ]
 TOKEN_TO_APP_DICT = {
-    "MYSECRET123": "app1",
-    "MYSECRET123_3": "app3",
+    #"MYSECRET123": "app1",
+    #"MYSECRET123_3": "app3",
     "mcqset1_token1": "mcqset1",
 }
 
@@ -25,6 +24,7 @@ def index_redirect(request):
         return redirect(reverse("core:home"))
     else:
         return redirect(reverse("core:login"))
+
 
 # Login page
 def login_view(request):
@@ -41,24 +41,20 @@ def login_view(request):
 
     return render(request, "core/login.html", {"error": error})
 
-# Protected home page
+
 @login_required(login_url="/core/login/")
 def home_view(request):
-    """
-    
-    """
     user = request.user
     from .models_mongo import UserPlugins
     doc = UserPlugins.objects(user_id=user.username).first()
 
     context = {
-        #"plugins": PLUGINS_login.keys(),
         "plugins": doc.plugins,
     }
     
     return render(request, 'core/home.html', context)
 
-# Logout
+
 def logout_view(request):
     logout(request)
     #return redirect(reverse("core:login"))
@@ -76,10 +72,8 @@ def token_view(request):
             request.session['access_token'] = token
 
             # Redirect to plugin dashboard
-            #return redirect(reverse(f'{TOKEN_TO_APP_DICT[token]}:firstpage'))
             return redirect(f'/plugins/{TOKEN_TO_APP_DICT[token]}/firstpage')
         else:
-
             return render(request, "core/token.html", {"error": "Invalid token"})
 
     return render(request, "core/token.html")
