@@ -52,6 +52,11 @@ def dashboard(request):
     logger.debug(f"App name is {APP_NAME}")
     print(f"App name is {APP_NAME}")
 
+    breadcrumbs = [
+        {"name": "Dashboard", "url": "/core/home/"},
+        {"name": f"Task", "url": None},  # current page
+    ]
+
     #if APP_NAME not in ["mcqset1"]:
     #    raise Http404("App name not found")
 
@@ -65,6 +70,7 @@ def dashboard(request):
         'mcq_answers': mcq_answers,
         'total_questions': total_questions,
         'all_answered': all_answered,
+        "breadcrumbs": breadcrumbs,
     }
 
     #return render_with_context(request, "tokentask/home.html", context)
@@ -102,6 +108,11 @@ def firstpage(request):
     """
     This is accessed either via GET or POST.
     """
+    breadcrumbs = [
+        {"name": "Dashboard", "url": "/core/home/"},
+        {"name": f"Task", "url": None},  # current page
+    ]
+
     # Initialize session storage for answers if not exist
     if 'mcq_answers' not in request.session:
         request.session['mcq_answers'] = {}  # {q_id: choice_index}
@@ -137,12 +148,18 @@ def firstpage(request):
         'selected_choice': selected_choice,
         'all_answered': all_answered,
         'app_name': APP_NAME,
+        "breadcrumbs": breadcrumbs,
     }
     return render(request, f'{APP_NAME}/firstpage.html', context)
 
 
 @login_required(login_url="/core/login/")
 def review(request):
+    breadcrumbs = [
+        {"name": "Dashboard", "url": "/core/home/"},
+        {"name": f"Task", "url": None},  # current page
+    ]
+    
     mcq_answers = request.session.get('mcq_answers', {})
 
     # ---- Guard: ensure all questions are answered ----
@@ -195,6 +212,7 @@ $$
         'percentage': percentage,
         'questions': questions_for_review,
         'app_name': APP_NAME,
+        "breadcrumbs": breadcrumbs,
     }
 
     return render(request, f'{APP_NAME}/review.html', context)

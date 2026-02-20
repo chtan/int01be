@@ -11,4 +11,13 @@ and those that are decorated with token_required.
 
 @login_required(login_url="/core/login/")
 def dashboard(request):
-    return render(request, "app2/dashboard.html")
+    breadcrumbs = [
+        {"name": "Dashboard", "url": "/core/home/"},
+        {"name": f"Task", "url": None},  # current page
+    ]
+
+    context = {
+        "breadcrumbs": breadcrumbs,
+    }
+
+    return render(request, "app2/dashboard.html", context)

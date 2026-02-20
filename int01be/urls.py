@@ -30,6 +30,10 @@ urlpatterns += [path('tokentask/', include('tokentask.urls'))]
 urlpatterns += [path('core/', include('core.urls'))]
 urlpatterns += [path('plugins/', include('plugins.urls'))]
 
+urlpatterns += [path('coordinator/', include('coordinator.urls'))]
+urlpatterns += [path('learner/', include('learner.urls'))]
+
+
 # Dynamically include plugins
 #
 # Namespaces cannot be added dynamically, need server to restart.

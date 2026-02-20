@@ -45,12 +45,40 @@ def login_view(request):
 @login_required(login_url="/core/login/")
 def home_view(request):
     user = request.user
-    from .models_mongo import UserPlugins
-    doc = UserPlugins.objects(user_id=user.username).first()
+    is_learner = user.userprofile.is_learner
+    is_coordinator = user.userprofile.is_coordinator
 
-    context = {
-        "plugins": doc.plugins,
-    }
+    breadcrumbs = [
+        {"name": "Dashboard", "url": None},
+    ]
+
+    if is_learner:
+        from coordinator.services import getTasksForUser
+        tasks = getTasksForUser(user.username)
+
+        context = {
+            "plugins": tasks,
+            "is_learner": is_learner,
+            "is_coordinator": is_coordinator,
+            "breadcrumbs": breadcrumbs,
+        }
+    elif is_coordinator:
+        from coordinator.services import getTasks, getTaskStats
+        usertasks = getTasks(user.username)
+        taskstats = getTaskStats(user.username, usertasks)
+
+        context = {
+            "is_learner": is_learner,
+            "is_coordinator": is_coordinator,
+            "taskstats": taskstats,
+            "breadcrumbs": breadcrumbs,
+        }
+    else:
+        context = {
+            "is_learner": is_learner,
+            "is_coordinator": is_coordinator,
+            "breadcrumbs": breadcrumbs,
+        }
     
     return render(request, 'core/home.html', context)
 

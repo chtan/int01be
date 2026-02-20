@@ -120,8 +120,25 @@
 }
 </style>
 
-<div class="home-container">
+{% if breadcrumbs %}
+<nav aria-label="breadcrumb" class="mb-3">
+<ol class="breadcrumb">
+  {% for crumb in breadcrumbs %}
+    {% if crumb.url %}
+      <li class="breadcrumb-item">
+        <a href="{{ crumb.url }}">{{ crumb.name }}</a>
+      </li>
+    {% else %}
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ crumb.name }}
+      </li>
+    {% endif %}
+  {% endfor %}
+</ol>
+</nav>
+{% endif %}
 
+<div class="home-container">      
     <!-- Welcome Card -->
     <div class="card">
         <h2>Welcome to {{ app_name }}</h2>
